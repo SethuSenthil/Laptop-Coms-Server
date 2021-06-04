@@ -39,8 +39,8 @@ func PhoneBackup() string {
 		}
 
 		hour := strings.Split(strings.ToUpper(dayAndHour), "YESTERDAY AT")[1]
-		print(amOrpm)
-		print(hour)
+		//print(amOrpm)
+		//print(hour)
 
 		currentTime := time.Now()
 		currentTimeString := currentTime.Format("3 PM")
@@ -48,7 +48,7 @@ func PhoneBackup() string {
 		currentHour := strings.Split(currentTimeString, " ")[0]
 		currentAmorPm := strings.Split(currentTimeString, " ")[1]
 
-		println("ok: " + currentHour + currentAmorPm)
+		//println("ok: " + currentHour + currentAmorPm)
 
 		if currentAmorPm == amOrpm {
 			//compare hour since AM and PM are same
@@ -68,16 +68,18 @@ func PhoneBackup() string {
 	}
 
 	if backup {
-		fmt.Println("Should Backup")
+		fmt.Println("Trying To Backup...")
 
 		cc, bb := exec.Command("cfgutil", "backup"), new(strings.Builder)
 		cc.Stdout = bb
 		cc.Run()
 		backupRes := bb.String()
 
+		currentTime := time.Now()
+
 		if strings.Contains(backupRes, "ECID") {
 			//ran successfully
-			fmt.Println("Backed up successfully")
+			fmt.Println("Backed up successfully on " + currentTime.Format("01-02-2006 15:04:05"))
 			return "Backed up successfully"
 		} else {
 			//Error, device most likely not found or available
@@ -86,6 +88,6 @@ func PhoneBackup() string {
 		}
 	}
 
-	return "Error Default"
+	return "Not Backing Up"
 
 }
