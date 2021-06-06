@@ -7,7 +7,12 @@ import (
 	"time"
 )
 
+func print(s string) {
+	fmt.Println("PhoneBackup: " + s)
+}
+
 func PhoneBackup() string {
+
 	backup := false
 
 	c, b := exec.Command("cfgutil", "list-backups"), new(strings.Builder) //cfgutil CLI provided by https://apps.apple.com/us/app/apple-configurator-2/id1037126344
@@ -22,7 +27,7 @@ func PhoneBackup() string {
 	dateString := dayAndHour + ":" + miniuteAndAmPm
 	dateString = strings.ToUpper(dateString)
 
-	print(dateString)
+	//print(dateString)
 
 	if strings.Contains(dateString, "TODAY") { //check if it has atleast been around 24 hours since the last backup
 		//no need to run backup, its already done today
@@ -68,7 +73,7 @@ func PhoneBackup() string {
 	}
 
 	if backup {
-		fmt.Println("Trying To Backup...")
+		print("Trying To Backup...")
 
 		cc, bb := exec.Command("cfgutil", "backup"), new(strings.Builder)
 		cc.Stdout = bb
@@ -79,15 +84,15 @@ func PhoneBackup() string {
 
 		if strings.Contains(backupRes, "ECID") {
 			//ran successfully
-			fmt.Println("Backed up successfully on " + currentTime.Format("01-02-2006 15:04:05"))
+			print("Backed up successfully on " + currentTime.Format("01-02-2006 15:04:05"))
 			return "Backed up successfully"
 		} else {
 			//Error, device most likely not found or available
-			fmt.Println("Device probably not connected")
-			return "Error occured, Device probably not connected"
+			print("Device probably not connected")
+			return "Error occurred, Device probably not connected"
 		}
 	}
-
+	print("Not Backing Up")
 	return "Not Backing Up"
 
 }
